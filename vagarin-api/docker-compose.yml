@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres-db:
+    image: postgis/postgis:15-3.4
+    container_name: vagarin-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=vagarin
+      - POSTGRES_PASSWORD=vagarin
+      - POSTGRES_DB=vagarin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

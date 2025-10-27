@@ -1,0 +1,2 @@
+Este código é proprietário e protegido por direitos autorais (All Rights Reserved). 
+Ele está público apenas para fins de avaliação e não pode ser copiado, modificado ou distribuído sem permissão expressa do autor.
