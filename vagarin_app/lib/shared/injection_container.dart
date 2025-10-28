@@ -9,6 +9,8 @@ import 'package:vagarin_app/core/auth/i_auth_service.dart';
 import 'package:vagarin_app/core/services/i_secure_local_storage_service.dart';
 import 'package:vagarin_app/core/services/secure_storage_service.dart';
 
+import '../features/auth/stores/auth_store.dart';
+
 final getIt = GetIt.instance;
 
 void setupInjections() {
@@ -37,4 +39,6 @@ void setupInjections() {
       getIt<GoogleSignIn>(),
     ),
   );
+
+  getIt.registerSingleton<AuthStore>(AuthStore(getIt<IAuthService>()));
 }
