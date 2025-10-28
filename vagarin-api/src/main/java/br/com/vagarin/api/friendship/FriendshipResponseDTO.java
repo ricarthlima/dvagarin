@@ -3,11 +3,12 @@ package br.com.vagarin.api.friendship;
 import br.com.vagarin.api.user.UserResponseDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class FriendshipResponseDTO {
 
-    private Long id;
+    private UUID id;
     private UserResponseDTO requester;
     private UserResponseDTO receiver;
     private FriendshipStatus status;

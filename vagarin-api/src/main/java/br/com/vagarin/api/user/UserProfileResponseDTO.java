@@ -1,6 +1,8 @@
 package br.com.vagarin.api.user;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
 import org.locationtech.jts.geom.Point;
 
 import lombok.Data;
@@ -8,7 +10,7 @@ import lombok.Data;
 @Data
 public class UserProfileResponseDTO {
 
-    private Long id;
+    private UUID id;
     private String firebaseUid;
     private String username;
     private String name;
@@ -26,6 +28,7 @@ public class UserProfileResponseDTO {
     private boolean configNotifyReactions;
     private boolean configNotifyFriendPosts;
     private boolean configNotifyPostReminder;
+    private boolean configNotifyNewFriendRequests;
 
     // Construtor para facilitar
     public UserProfileResponseDTO(User user) {
@@ -47,5 +50,6 @@ public class UserProfileResponseDTO {
         this.configNotifyReactions = user.isConfigNotifyReactions();
         this.configNotifyFriendPosts = user.isConfigNotifyFriendPosts();
         this.configNotifyPostReminder = user.isConfigNotifyPostReminder();
+        this.configNotifyNewFriendRequests = user.isConfigNotifyNewFriendRequests();
     }
 }

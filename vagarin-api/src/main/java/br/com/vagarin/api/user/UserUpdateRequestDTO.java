@@ -20,4 +20,5 @@ public class UserUpdateRequestDTO {
     private Boolean configNotifyReactions;
     private Boolean configNotifyFriendPosts;
     private Boolean configNotifyPostReminder;
+    private Boolean configNotifyNewFriendRequests;
 }

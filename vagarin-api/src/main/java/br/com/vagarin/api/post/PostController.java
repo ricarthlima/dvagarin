@@ -9,6 +9,7 @@ import br.com.vagarin.api.reaction.ReactionSummaryDTO;
 import br.com.vagarin.api.user.User;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,7 @@ public class PostController {
      * (Não precisa de autenticação para VER, por enquanto)
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getPostById(@PathVariable Long postId) {
+    public ResponseEntity<?> getPostById(@PathVariable UUID postId) {
         Post post = postService.findPostById(postId);
         PostResponseDTO responseDTO = new PostResponseDTO(post);
         return ResponseEntity.ok(responseDTO);
@@ -64,7 +65,7 @@ public class PostController {
      */
     @PutMapping("/{postId}")
     public ResponseEntity<?> updatePost(
-            @PathVariable Long postId,
+            @PathVariable UUID postId,
             @RequestBody PostCreateRequestDTO requestDTO,
             @AuthenticationPrincipal User currentUser) {
 
@@ -79,7 +80,7 @@ public class PostController {
      */
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(
-            @PathVariable Long postId,
+            @PathVariable UUID postId,
             @AuthenticationPrincipal User currentUser) {
 
         postService.deletePost(postId, currentUser);
@@ -91,7 +92,7 @@ public class PostController {
      */
     @PostMapping("/{postId}/react")
     public ResponseEntity<ReactionSummaryDTO> toggleReaction(
-            @PathVariable Long postId,
+            @PathVariable UUID postId,
             @RequestBody ReactionRequestDTO requestDTO,
             @AuthenticationPrincipal User currentUser) {
 
@@ -109,7 +110,7 @@ public class PostController {
      */
     @GetMapping("/{postId}/reactions")
     public ResponseEntity<ReactionSummaryDTO> getReactions(
-            @PathVariable Long postId,
+            @PathVariable UUID postId,
             @AuthenticationPrincipal User currentUser) {
 
         ReactionSummaryDTO summary = reactionService.getReactionSummary(currentUser, postId);
@@ -133,7 +134,7 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentResponseDTO> createComment(
-            @PathVariable Long postId,
+            @PathVariable UUID postId,
             @RequestBody CommentRequestDTO requestDTO,
             @AuthenticationPrincipal User currentUser) {
 
@@ -148,7 +149,7 @@ public class PostController {
      */
     @GetMapping("/{postId}/comments")
     public ResponseEntity<List<CommentResponseDTO>> listComments(
-            @PathVariable Long postId) {
+            @PathVariable UUID postId) {
 
         List<CommentResponseDTO> comments = commentService.listCommentsForPost(postId);
         return ResponseEntity.ok(comments);

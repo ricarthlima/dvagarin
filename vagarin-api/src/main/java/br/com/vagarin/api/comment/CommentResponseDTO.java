@@ -3,10 +3,11 @@ package br.com.vagarin.api.comment;
 import br.com.vagarin.api.user.UserResponseDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class CommentResponseDTO {
-    private Long id;
+    private UUID id;
     private UserResponseDTO author;
     private String content;
     private LocalDateTime createdAt;

@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/friends")
@@ -20,7 +21,7 @@ public class FriendshipController {
     @PostMapping("/request/{userId}")
     public ResponseEntity<?> sendRequest( // Mudei pra '?' pra caber o DTO ou a String de erro
             @AuthenticationPrincipal User currentUser,
-            @PathVariable Long userId) {
+            @PathVariable UUID userId) {
 
         try {
             Friendship newRequest = friendshipService.sendFriendRequest(currentUser, userId);
@@ -37,7 +38,7 @@ public class FriendshipController {
     @PostMapping("/accept/{requestId}")
     public ResponseEntity<?> acceptRequest( // Mudei pra '?'
             @AuthenticationPrincipal User currentUser,
-            @PathVariable Long requestId) {
+            @PathVariable UUID requestId) {
 
         try {
             Friendship acceptedRequest = friendshipService.acceptFriendRequest(currentUser, requestId);
@@ -58,7 +59,7 @@ public class FriendshipController {
     @PostMapping("/reject/{requestId}")
     public ResponseEntity<?> rejectRequest(
             @AuthenticationPrincipal User currentUser,
-            @PathVariable Long requestId) {
+            @PathVariable UUID requestId) {
 
         try {
             Friendship rejectedRequest = friendshipService.rejectFriendRequest(currentUser, requestId);

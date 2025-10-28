@@ -1,10 +1,13 @@
 package br.com.vagarin.api.user;
 
 import br.com.vagarin.api.comment.Comment;
+import br.com.vagarin.api.device.UserDevice;
 import br.com.vagarin.api.friendship.Friendship;
 
 import lombok.ToString;
 import java.util.List;
+import java.util.UUID;
+
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
@@ -33,9 +36,10 @@ import br.com.vagarin.api.reaction.Reaction;
 @AllArgsConstructor // 5. (Lombok) Cria um construtor com todos os campos
 public class User {
 
-    @Id // 6. Define que este é o campo de Chave Primária (PK)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 7. O banco vai autoincrementar o ID
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID) // <-- MUDANÇA 1
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false) // <-- Boa prática
+    private UUID id;
 
     // 8. Chave do Firebase (MUITO IMPORTANTE)
     @Column(nullable = false, unique = true)
@@ -66,6 +70,7 @@ public class User {
     private boolean configNotifyReactions = true;
     private boolean configNotifyFriendPosts = true;
     private boolean configNotifyPostReminder = false;
+    private boolean configNotifyNewFriendRequests = true;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -90,4 +95,8 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<UserDevice> devices;
 }

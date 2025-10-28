@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +65,7 @@ public class CommentService {
     /**
      * REGRA 1: Criar um comentário
      */
-    public CommentResponseDTO createComment(User currentUser, Long postId, CommentRequestDTO dto) {
+    public CommentResponseDTO createComment(User currentUser, UUID postId, CommentRequestDTO dto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post não encontrado"));
 
@@ -83,7 +84,7 @@ public class CommentService {
     /**
      * REGRA 5: Editar seu próprio comentário
      */
-    public CommentResponseDTO updateComment(User currentUser, Long commentId, CommentRequestDTO dto) {
+    public CommentResponseDTO updateComment(User currentUser, UUID commentId, CommentRequestDTO dto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentário não encontrado"));
 
@@ -100,7 +101,7 @@ public class CommentService {
     /**
      * REGRAS 3 & 4: Deletar um comentário
      */
-    public void deleteComment(User currentUser, Long commentId) {
+    public void deleteComment(User currentUser, UUID commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentário não encontrado"));
 
@@ -118,7 +119,7 @@ public class CommentService {
     /**
      * Lógica para LISTAR todos os comentários de um post
      */
-    public List<CommentResponseDTO> listCommentsForPost(Long postId) {
+    public List<CommentResponseDTO> listCommentsForPost(UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post não encontrado"));
 

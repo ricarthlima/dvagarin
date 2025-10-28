@@ -2,6 +2,7 @@ package br.com.vagarin.api.friendship;
 
 import br.com.vagarin.api.exception.PermissionDeniedException;
 import br.com.vagarin.api.exception.ResourceNotFoundException;
+import br.com.vagarin.api.notification.NotificationService;
 import br.com.vagarin.api.user.User;
 import br.com.vagarin.api.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import br.com.vagarin.api.user.UserResponseDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class FriendshipService {
 
@@ -18,7 +22,10 @@ public class FriendshipService {
     private FriendshipRepository friendshipRepository;
 
     @Autowired
-    private UserRepository userRepository; // 1. Precisamos dele para achar o "amigo"
+    private UserRepository userRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * Lógica para ENVIAR um pedido de amizade
@@ -27,7 +34,7 @@ public class FriendshipService {
      * @param receiverId O ID do usuário que vai RECEBER o pedido
      * @return O objeto Friendship criado
      */
-    public Friendship sendFriendRequest(User requester, Long receiverId) {
+    public Friendship sendFriendRequest(User requester, UUID receiverId) {
 
         // 1. Busca o usuário que vai receber o pedido no banco
         User receiver = userRepository.findById(receiverId)
@@ -35,19 +42,50 @@ public class FriendshipService {
 
         // 2. Validações
         if (requester.getId().equals(receiverId)) {
-            throw new ResourceNotFoundException("Você não pode adicionar a si mesmo!");
+            // (Mudança de Exceção recomendada para 400 Bad Request)
+            throw new IllegalArgumentException("Você não pode adicionar a si mesmo!");
         }
 
-        // TODO: Checar se já existe um pedido (findByRequesterAndReceiver)
+        // 3. Checa se já existe um pedido em QUALQUER direção
+        Optional<Friendship> f1 = friendshipRepository.findByRequesterAndReceiver(requester, receiver);
+        Optional<Friendship> f2 = friendshipRepository.findByRequesterAndReceiver(receiver, requester);
 
-        // 3. Cria o novo registro de amizade
+        Optional<Friendship> existing = f1.or(() -> f2); // Pega o primeiro que existir
+
+        if (existing.isPresent()) {
+            Friendship friendship = existing.get();
+            switch (friendship.getStatus()) {
+                case ACCEPTED:
+                    throw new IllegalArgumentException("Vocês já são amigos.");
+                case PENDING:
+                    throw new IllegalArgumentException("Um pedido de amizade entre vocês já está pendente.");
+                case BLOCKED:
+                    throw new PermissionDeniedException("Não é possível enviar pedido de amizade.");
+                case REJECTED:
+                    // Se foi rejeitado, vamos permitir um novo pedido
+                    friendshipRepository.delete(friendship);
+                    // ...e deixamos o código continuar para criar um novo 'PENDING'.
+                    break;
+            }
+        }
+
+        // 4. Cria o novo registro de amizade
         Friendship newRequest = new Friendship();
         newRequest.setRequester(requester);
         newRequest.setReceiver(receiver);
         newRequest.setStatus(FriendshipStatus.PENDING);
-        // createdAt é automático
 
-        // 4. Salva no banco
+        // --- INÍCIO DO TRIGGER DE NOTIFICAÇÃO ---
+        if (receiver.isConfigNotifyNewFriendRequests()) {
+            notificationService.sendNotificationToUser(
+                    receiver,
+                    "Novo Pedido de Amizade! 👋",
+                    requester.getName() + " quer se conectar com você no Vagarin." // <-- Corrigi o Dvagarin ;)
+            );
+        }
+        // --- FIM DO TRIGGER ---
+
+        // 5. Salva o novo pedido
         return friendshipRepository.save(newRequest);
     }
 
@@ -58,7 +96,7 @@ public class FriendshipService {
      * @param requestId   O ID do PEDIDO DE AMIZADE (não o ID do usuário)
      * @return O objeto Friendship atualizado
      */
-    public Friendship acceptFriendRequest(User currentUser, Long requestId) {
+    public Friendship acceptFriendRequest(User currentUser, UUID requestId) {
 
         // 1. Busca o PEDIDO de amizade pelo ID
         Friendship request = friendshipRepository.findById(requestId)
@@ -66,8 +104,8 @@ public class FriendshipService {
 
         // 2. Validação: A pessoa que está aceitando é MESMO quem recebeu o pedido?
         if (!request.getReceiver().getId().equals(currentUser.getId())) {
-            throw new PermissionDeniedException("Você não tem permissão para aceitar este pedido"); // TODO: Exceção
-                                                                                                    // customizada
+            throw new PermissionDeniedException("Você não tem permissão para aceitar este pedido");
+
         }
 
         // 3. Validação: O pedido ainda está pendente?
@@ -85,7 +123,7 @@ public class FriendshipService {
     /**
      * Lógica para REJEITAR um pedido de amizade
      */
-    public Friendship rejectFriendRequest(User currentUser, Long requestId) {
+    public Friendship rejectFriendRequest(User currentUser, UUID requestId) {
 
         // 1. Busca o PEDIDO de amizade pelo ID
         Friendship request = friendshipRepository.findById(requestId)

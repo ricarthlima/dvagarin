@@ -1,5 +1,7 @@
 package br.com.vagarin.api.reaction;
 
+import java.util.UUID;
+
 import br.com.vagarin.api.post.Post;
 import br.com.vagarin.api.user.User;
 import jakarta.persistence.*;
@@ -19,8 +21,9 @@ import lombok.NoArgsConstructor;
 public class Reaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
+    private UUID id;
 
     // Quem reagiu
     @ManyToOne(fetch = FetchType.LAZY)

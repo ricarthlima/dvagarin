@@ -1,11 +1,14 @@
 package br.com.vagarin.api.user;
 
 import lombok.Data;
+
+import java.util.UUID;
+
 import org.locationtech.jts.geom.Point;
 
 @Data
 public class UserResponseDTO {
-    private Long id;
+    private UUID id;
     private String username;
     private String name;
     private String profilePictureUrl;

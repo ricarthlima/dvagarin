@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ReactionRepository extends JpaRepository<Reaction, Long> {
+public interface ReactionRepository extends JpaRepository<Reaction, UUID> {
 
     // Método chave para o "toggle": Achar uma reação específica
     Optional<Reaction> findByUserAndPostAndType(User user, Post post, ReactionType type);

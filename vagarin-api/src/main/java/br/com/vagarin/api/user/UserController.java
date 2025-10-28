@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.vagarin.api.device.DeviceRegistrationRequestDTO;
 import br.com.vagarin.api.post.PostResponseDTO;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +47,7 @@ public class UserController {
      */
     @GetMapping("/{userId}/posts")
     public ResponseEntity<?> getUserPosts( // 1. Mudei o nome do método
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             // 2. A MÁGICA: required = false
             @RequestParam(name = "date", required = false) LocalDate date) {
 
@@ -95,12 +98,20 @@ public class UserController {
      */
     @GetMapping("/{username}")
     public ResponseEntity<UserResponseDTO> getUserProfileByUsername(
-            @PathVariable String username) {
+            @PathVariable String username,
+            // 1. ADICIONE ESTE PARÂMETRO
+            // Ele será 'null' se a requisição não for autenticada
+            @AuthenticationPrincipal User currentUser) {
 
-        UserResponseDTO profileDTO = userService.getUserPublicProfile(username);
+        // 2. PASSE O 'currentUser' PARA O SERVIÇO
+        UserResponseDTO profileDTO = userService.getUserPublicProfile(username, currentUser);
         return ResponseEntity.ok(profileDTO);
     }
 
+    /**
+     * Endpoint para ENCONTRAR usuários próximos
+     * Ex: /api/v1/users/nearby?radiusKm=5
+     */
     @GetMapping("/nearby")
     public ResponseEntity<List<UserResponseDTO>> getNearbyUsers(
             @AuthenticationPrincipal User currentUser,
@@ -122,5 +133,17 @@ public class UserController {
 
         List<UserResponseDTO> users = userService.searchUsers(query);
         return ResponseEntity.ok(users);
+    }
+
+    /**
+     * Endpoint para REGISTRAR o token FCM do dispositivo do usuário
+     */
+    @PostMapping("/me/register-device")
+    public ResponseEntity<?> registerDevice(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody DeviceRegistrationRequestDTO requestDTO) {
+
+        userService.registerDevice(currentUser, requestDTO.getFcmToken());
+        return ResponseEntity.ok().build();
     }
 }

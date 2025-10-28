@@ -1,6 +1,7 @@
 package br.com.vagarin.api.reaction;
 
 import br.com.vagarin.api.exception.ResourceNotFoundException;
+import br.com.vagarin.api.notification.NotificationService;
 import br.com.vagarin.api.post.Post;
 import br.com.vagarin.api.post.PostRepository;
 import br.com.vagarin.api.user.User;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,10 +23,13 @@ public class ReactionService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     /**
      * Lógica principal de "TOGGLE" (Adicionar ou Remover) uma reação
      */
-    public ReactionSummaryDTO toggleReaction(User currentUser, Long postId, ReactionType reactionType) {
+    public ReactionSummaryDTO toggleReaction(User currentUser, UUID postId, ReactionType reactionType) {
 
         // 1. Acha o Post
         Post post = postRepository.findById(postId)
@@ -43,6 +48,20 @@ public class ReactionService {
             // 3b. NÃO EXISTE: Cria a nova reação (Toggle On)
             Reaction newReaction = new Reaction(null, currentUser, post, reactionType);
             reactionRepository.save(newReaction);
+
+            // --- INÍCIO DO TRIGGER DE NOTIFICAÇÃO ---
+            User postAuthor = post.getAuthor();
+            // Evita se auto-notificar
+            if (!postAuthor.getId().equals(currentUser.getId())) {
+                // Checa a config do AUTOR
+                if (postAuthor.isConfigNotifyReactions()) {
+                    notificationService.sendNotificationToUser(
+                            postAuthor,
+                            "Nova Reação! ❤️",
+                            currentUser.getName() + " reagiu ao seu post.");
+                }
+            }
+            // --- FIM DO TRIGGER ---
         }
 
         // 4. Retorna o novo resumo atualizado de reações do post
@@ -52,7 +71,7 @@ public class ReactionService {
     /**
      * Lógica para LER o resumo de reações de um post
      */
-    public ReactionSummaryDTO getReactionSummary(User currentUser, Long postId) {
+    public ReactionSummaryDTO getReactionSummary(User currentUser, UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post não encontrado"));
 

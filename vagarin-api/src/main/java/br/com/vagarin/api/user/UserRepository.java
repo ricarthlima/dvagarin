@@ -9,9 +9,10 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository // Avisa ao Spring que esta é uma interface de Repositório
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, UUID> {
         // JpaRepository<TipoDaEntidade, TipoDoId>
 
         // O Spring Data JPA é tão inteligente que ele cria a query
@@ -32,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         List<User> findNearbyUsers(
                         @Param("userLocation") Point userLocation,
                         @Param("radiusMeters") double radiusMeters,
-                        @Param("userId") Long userId);
+                        @Param("userId") UUID userId);
 
         /**
          * Método mágico do Spring Data JPA:
@@ -43,4 +44,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         List<User> findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseAndConfigIsPrivateIsFalse(
                         String nameQuery,
                         String usernameQuery);
+
+        List<User> findByConfigNotifyPostReminder(boolean value);
 }

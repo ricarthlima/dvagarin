@@ -1,6 +1,9 @@
 package br.com.vagarin.api.comment;
 
 import br.com.vagarin.api.user.User;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,7 +21,7 @@ public class CommentController {
      */
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDTO> updateComment(
-            @PathVariable Long commentId,
+            @PathVariable UUID commentId,
             @RequestBody CommentRequestDTO requestDTO,
             @AuthenticationPrincipal User currentUser) {
 
@@ -32,7 +35,7 @@ public class CommentController {
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(
-            @PathVariable Long commentId,
+            @PathVariable UUID commentId,
             @AuthenticationPrincipal User currentUser) {
 
         commentService.deleteComment(currentUser, commentId);
