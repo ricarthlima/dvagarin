@@ -2,6 +2,8 @@ package br.com.vagarin.api.config;
 
 // 1. Importe o filtro que acabamos de criar
 import br.com.vagarin.api.security.FirebaseTokenFilter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(name = SecurityConfig.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfig {
+    public static final String SECURITY = "bearerAuth";
 
     // 3. Injeta o nosso filtro
     @Autowired
@@ -32,6 +36,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 4. Mantém o endpoint de registro público
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
+
+                        // 2. Endpoints do Swagger (para ver a documentação)
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         // 5. MUDANÇA IMPORTANTE:
                         // Agora, qualquer outra requisição DEVE estar autenticada

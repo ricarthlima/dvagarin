@@ -1,6 +1,8 @@
 package br.com.vagarin.api.comment;
 
+import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.user.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.UUID;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/comments") // Rota base para comentários
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class CommentController {
 
     @Autowired

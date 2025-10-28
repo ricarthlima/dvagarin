@@ -3,10 +3,12 @@ package br.com.vagarin.api.post;
 import br.com.vagarin.api.comment.CommentRequestDTO;
 import br.com.vagarin.api.comment.CommentResponseDTO;
 import br.com.vagarin.api.comment.CommentService;
+import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.reaction.ReactionRequestDTO;
 import br.com.vagarin.api.reaction.ReactionService;
 import br.com.vagarin.api.reaction.ReactionSummaryDTO;
 import br.com.vagarin.api.user.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/v1/posts")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class PostController {
 
     @Autowired

@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.device.DeviceRegistrationRequestDTO;
 import br.com.vagarin.api.post.PostResponseDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +25,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController // 1. Avisa ao Spring que esta classe define Endpoints REST
 @RequestMapping("/api/v1/users") // 2. Define o prefixo da URL para todos os endpoints desta classe
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class UserController {
 
     // 3. Injeta o "cérebro" (Service) que criamos

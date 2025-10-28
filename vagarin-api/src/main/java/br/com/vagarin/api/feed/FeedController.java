@@ -1,6 +1,9 @@
 package br.com.vagarin.api.feed;
 
+import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.user.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/feed")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class FeedController {
 
     @Autowired

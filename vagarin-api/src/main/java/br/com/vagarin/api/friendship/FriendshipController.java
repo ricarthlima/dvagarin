@@ -1,7 +1,9 @@
 package br.com.vagarin.api.friendship;
 
+import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.user.User;
 import br.com.vagarin.api.user.UserResponseDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/friends")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class FriendshipController {
 
     @Autowired
