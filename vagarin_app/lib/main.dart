@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vagarin_app/core/theme/app_theme.dart';
 import 'package:vagarin_app/features/auth/stores/auth_store.dart';
 import 'package:vagarin_app/firebase_options.dart';
 import 'package:vagarin_app/shared/injection_container.dart';
@@ -15,12 +16,12 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   setupInjections();
-
   await getIt.allReady();
 
   await getIt<AuthStore>().checkLoginStatus();
 
   final router = setupRouter();
+  getIt.registerSingleton<GoRouter>(router);
 
   runApp(MainApp(router: router));
 }
@@ -34,6 +35,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: "Dvagarin",
+      theme: AppTheme().light,
       routerConfig: router,
     );
   }

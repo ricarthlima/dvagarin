@@ -33,7 +33,6 @@ class FirebaseAuthService implements IAuthService {
     }
   }
 
-  /// Helper privado para mapear o User do Firebase para o nosso modelo
   AuthUser _mapFirebaseUserToAuthUser(User? firebaseUser) {
     if (firebaseUser == null) {
       return AuthUser.empty;
@@ -43,7 +42,6 @@ class FirebaseAuthService implements IAuthService {
 
   @override
   Stream<AuthUser> get onAuthStateChanged {
-    // Mapeia o stream do Firebase para o nosso modelo AuthUser
     return _firebaseAuth.authStateChanges().map(_mapFirebaseUserToAuthUser);
   }
 
@@ -73,7 +71,6 @@ class FirebaseAuthService implements IAuthService {
       email: email,
       password: password,
     );
-    // IMPORTANTE: O signUp já loga o usuário, então salvamos o token
     await _saveToken(credential.user);
   }
 
@@ -109,17 +106,23 @@ class FirebaseAuthService implements IAuthService {
         await _saveToken(userCredential.user);
       }
     } catch (e) {
-      // TODO: Logar o erro
-      // Tenta deslogar do Google se algo deu errado no meio do caminho
-      await _googleSignIn.signOut();
+      await _signOutGoogle();
       rethrow;
     }
   }
 
   @override
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    await _signOutGoogle();
     await _firebaseAuth.signOut();
     await _localStorageService.deleteToken();
+  }
+
+  Future<void> _signOutGoogle() async {
+    try {
+      await _googleSignIn.signOut();
+    } catch (e) {
+      print("exceção inofensiva");
+    }
   }
 }
