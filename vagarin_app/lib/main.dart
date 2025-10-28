@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vagarin_app/firebase_options.dart';
+import 'package:vagarin_app/shared/injection_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,6 +9,10 @@ void main() async {
   // TODO: No futuro, podemos separar dev, homolog e prod em projetos
   // Firebase diferentes, mas para essa entrega não é necessário.
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  setupInjections();
+
+  await getIt.allReady();
 
   runApp(const MainApp());
 }
