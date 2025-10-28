@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.topLeft,
                     child: IconButton(
                       onPressed: () {
-                        context.pop();
+                        GoRouter.of(context).go('/');
                       },
                       icon: Icon(Icons.close),
                     ),
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (_) => EmailFormField(
           errorText: formStore.emailError,
           onChange: (value) {
-            formStore.email = value ?? '';
+            formStore.setEmail(value ?? '');
           },
         ),
       ),
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
           labelText: 'Senha',
           errorText: formStore.passwordError,
           onChange: (value) {
-            formStore.password = value ?? '';
+            formStore.setPassword(value ?? '');
           },
           onForgetPressed: () {},
         ),
@@ -134,21 +134,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 HardElevatedButton.grey(
                   onPressed: () {
-                    GoRouter.of(context).goNamed(AppRoutes.signup, extra: true);
+                    GoRouter.of(
+                      context,
+                    ).pushNamed(AppRoutes.signup, extra: true);
                   },
                   label: "Criar conta",
+                ),
+                GoogleAuthButton(
+                  onPressed: () {
+                    authStore.signInWithGoogle();
+                  },
+                  themeMode: ThemeMode.light,
                 ),
               ],
             );
           }
         },
       ),
-      GoogleAuthButton(
-        onPressed: () {
-          authStore.signInWithGoogle();
-        },
-        themeMode: ThemeMode.light,
-      ),
+
       TermsAndPrivacyWidget(),
     ];
   }
