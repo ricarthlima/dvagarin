@@ -26,6 +26,8 @@ dependencies:
   equatable: ^2.0.7
   google_sign_in: ^7.2.0
   go_router: ^16.3.0
+  flutter_markdown_plus: ^1.0.5
+  validators: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -37,3 +39,118 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+  
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: fonts/Nunito/Nunito-Black.ttf
+        - asset: fonts/Nunito/Nunito-BlackItalic.ttf
+          style: italic
+        - asset: fonts/Nunito/Nunito-Bold.ttf
+          weight: 700
+        - asset: fonts/Nunito/Nunito-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: fonts/Nunito/Nunito-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/Nunito/Nunito-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: fonts/Nunito/Nunito-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/Nunito/Nunito-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: fonts/Nunito/Nunito-Italic.ttf
+          style: italic
+        - asset: fonts/Nunito/Nunito-Light.ttf
+          weight: 300
+        - asset: fonts/Nunito/Nunito-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: fonts/Nunito/Nunito-Medium.ttf
+          weight: 500
+        - asset: fonts/Nunito/Nunito-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: fonts/Nunito/Nunito-Regular.ttf
+        - asset: fonts/Nunito/Nunito-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Nunito/Nunito-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+    - family: Fredoka
+      fonts:
+        - asset: fonts/Fredoka/Fredoka-Regular.ttf
+        - asset: fonts/Fredoka/Fredoka-Light.ttf
+          weight: 300
+        - asset: fonts/Fredoka/Fredoka-Medium.ttf
+          weight: 500
+        - asset: fonts/Fredoka/Fredoka-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Fredoka/Fredoka-Bold.ttf
+          weight: 700
+
+    - family: FredokaCondensed
+      fonts:
+        - asset: fonts/Fredoka/Fredoka_Condensed-Regular.ttf
+        - asset: fonts/Fredoka/Fredoka_Condensed-Light.ttf
+          weight: 300
+        - asset: fonts/Fredoka/Fredoka_Condensed-Medium.ttf
+          weight: 500
+        - asset: fonts/Fredoka/Fredoka_Condensed-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Fredoka/Fredoka_Condensed-Bold.ttf
+          weight: 700
+
+    - family: FredokaExpanded
+      fonts:
+        - asset: fonts/Fredoka/Fredoka_Expanded-Regular.ttf
+        - asset: fonts/Fredoka/Fredoka_Expanded-Light.ttf
+          weight: 300
+        - asset: fonts/Fredoka/Fredoka_Expanded-Medium.ttf
+          weight: 500
+        - asset: fonts/Fredoka/Fredoka_Expanded-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Fredoka/Fredoka_Expanded-Bold.ttf
+          weight: 700
+
+    - family: FredokaSemiCondensed
+      fonts:
+        - asset: fonts/Fredoka/Fredoka_SemiCondensed-Regular.ttf
+        - asset: fonts/Fredoka/Fredoka_SemiCondensed-Light.ttf
+          weight: 300
+        - asset: fonts/Fredoka/Fredoka_SemiCondensed-Medium.ttf
+          weight: 500
+        - asset: fonts/Fredoka/Fredoka_SemiCondensed-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Fredoka/Fredoka_SemiCondensed-Bold.ttf
+          weight: 700
+
+    - family: FredokaSemiExpanded
+      fonts:
+        - asset: fonts/Fredoka/Fredoka_SemiExpanded-Regular.ttf
+        - asset: fonts/Fredoka/Fredoka_SemiExpanded-Light.ttf
+          weight: 300
+        - asset: fonts/Fredoka/Fredoka_SemiExpanded-Medium.ttf
+          weight: 500
+        - asset: fonts/Fredoka/Fredoka_SemiExpanded-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Fredoka/Fredoka_SemiExpanded-Bold.ttf
+          weight: 700
+          
+    - family: Baloo2
+      fonts:
+        - asset: fonts/Baloo_2/Baloo2-Regular.ttf
+        - asset: fonts/Baloo_2/Baloo2-Medium.ttf
+          weight: 500
+        - asset: fonts/Baloo_2/Baloo2-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Baloo_2/Baloo2-Bold.ttf
+          weight: 700
+        - asset: fonts/Baloo_2/Baloo2-ExtraBold.ttf
+          weight: 800
