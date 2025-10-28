@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:vagarin_app/core/services/i_secure_local_service.dart';
+import 'package:vagarin_app/core/services/i_secure_local_storage_service.dart';
 
 class SecureStorageService implements ISecureLocalStorageService {
   final FlutterSecureStorage _storage;
