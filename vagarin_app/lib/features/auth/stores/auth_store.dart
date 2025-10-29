@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -70,6 +71,8 @@ abstract class _AuthStore with Store {
       registrationStatus = requiresReg
           ? RegistrationStatus.required
           : RegistrationStatus.complete;
+    } on DioException {
+      errorMessage = 'Falha de rede. Tente novamente.';
     } catch (e) {
       errorMessage = _mapAuthExceptionMessage(e);
     } finally {

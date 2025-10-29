@@ -4,7 +4,7 @@ import 'package:mobx/mobx.dart';
 import 'package:vagarin_app/core/router/app_routes.dart';
 import 'package:vagarin_app/features/auth/pages/login_screen.dart';
 import 'package:vagarin_app/features/onboarding/pages/onboarding_screen.dart';
-import 'package:vagarin_app/features/register/pages/register_screen.dart';
+import 'package:vagarin_app/features/register/presentation/pages/register_screen.dart';
 import 'package:vagarin_app/features/auth/pages/signup_screen.dart';
 import 'package:vagarin_app/features/auth/stores/auth_store.dart';
 import 'package:vagarin_app/features/home/pages/home_screen.dart';
