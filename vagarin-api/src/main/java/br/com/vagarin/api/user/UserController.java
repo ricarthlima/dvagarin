@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.vagarin.api.config.SecurityConfig;
 import br.com.vagarin.api.device.DeviceRegistrationRequestDTO;
+import br.com.vagarin.api.exception.ResourceNotFoundException;
 import br.com.vagarin.api.post.PostResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.time.LocalDate;
@@ -149,5 +152,28 @@ public class UserController {
 
         userService.registerDevice(currentUser, requestDTO.getFcmToken());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/check-registration")
+    @Operation(summary = "Verifica se o usuário autenticado já completou o registro no backend")
+    @ApiResponse(responseCode = "200", description = "Usuário já registrado, retorna dados do perfil")
+    @ApiResponse(responseCode = "404", description = "Usuário autenticado no Firebase, mas não registrado no backend local")
+    public ResponseEntity<UserProfileResponseDTO> checkUserRegistration(
+            @AuthenticationPrincipal User currentUser) { // Usa o usuário que o Filtro achou
+
+        // Se o currentUser é null (Filtro não achou pelo UID), o Spring Security
+        // já deveria ter barrado com 401/403 ANTES de chegar aqui.
+        // Mas podemos adicionar uma checagem dupla por segurança.
+        if (currentUser == null) {
+            // Teoricamente inalcançável se o filtro e o SecurityConfig estiverem corretos
+            // Poderia lançar ResourceNotFoundException aqui também.
+            // Vamos confiar no filtro por enquanto e só retornar o DTO.
+            throw new ResourceNotFoundException("Usuário não encontrado no backend local.");
+        }
+
+        // Se chegou aqui, o filtro ACHOU o usuário no banco pelo token.
+        // Apenas convertemos para o DTO de resposta.
+        UserProfileResponseDTO profileDTO = new UserProfileResponseDTO(currentUser);
+        return ResponseEntity.ok(profileDTO);
     }
 }

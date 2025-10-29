@@ -12,56 +12,56 @@ import 'package:vagarin_app/shared/injection_container.dart';
 
 class AuthStateListenable extends ChangeNotifier {
   final AuthStore _authStore = getIt<AuthStore>();
-  late final ReactionDisposer _disposer;
+  late final List<ReactionDisposer> _disposers;
 
   AuthStateListenable() {
-    _disposer = reaction((_) => _authStore.isAuthenticated, (bool isAuth) {
-      notifyListeners();
-    });
+    _disposers = [
+      reaction((_) => _authStore.isAuthenticated, (_) => notifyListeners()),
+      reaction((_) => _authStore.registrationStatus, (_) => notifyListeners()),
+      reaction((_) => _authStore.isLoading, (_) => notifyListeners()),
+    ];
   }
 
   @override
   void dispose() {
-    _disposer();
+    for (final d in _disposers) {
+      d();
+    }
     super.dispose();
   }
 }
+
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter setupRouter() {
   final authStore = getIt<AuthStore>();
   final authStateListenable = getIt<AuthStateListenable>();
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: '/',
     refreshListenable: authStateListenable,
-    redirect: (BuildContext context, GoRouterState state) {
-      final bool isAuthenticated = authStore.isAuthenticated;
-      final String currentLocation = state.matchedLocation;
-      print(
-        '>>> GoRouter Redirect Check (Web?): IsAuth=$isAuthenticated, Location=$currentLocation',
-      );
+    redirect: (context, state) {
+      final isAuthenticated = authStore.isAuthenticated;
+      final status = authStore.registrationStatus;
+      final isLoading = authStore.isLoading;
 
-      final authRelatedRoutes = [
-        '/',
-        '/login',
-        '/signup',
-        '/register',
-        '/onboarding',
-      ];
+      final loc = state.matchedLocation;
+      const authRoutes = ['/', '/login', '/signup', '/register', '/onboarding'];
 
-      final bool isGoingToAuthRelatedRoute = authRelatedRoutes.contains(
-        currentLocation,
-      );
+      // enquanto carrega OU não sabe se precisa registrar, não decide
+      if (isLoading || status == RegistrationStatus.unknown) return null;
 
       if (!isAuthenticated) {
-        return isGoingToAuthRelatedRoute ? null : '/';
+        return authRoutes.contains(loc) ? null : '/';
       }
 
-      if (isGoingToAuthRelatedRoute) {
-        return '/home';
+      if (status == RegistrationStatus.required) {
+        return loc == '/register' ? null : '/register';
       }
 
-      return null;
+      // autenticado + registrado
+      return authRoutes.contains(loc) ? '/home' : null;
     },
     routes: [
       GoRoute(path: '/', builder: (context, state) => OnboardingScreen()),

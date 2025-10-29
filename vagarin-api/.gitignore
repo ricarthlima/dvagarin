@@ -12,6 +12,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
+dir_to_json.py
+estrutura.json
 
 ### IntelliJ IDEA ###
 .idea
@@ -34,3 +36,4 @@ build/
 
 ## FIREBASE ##
 serviceAccountKey.json
+

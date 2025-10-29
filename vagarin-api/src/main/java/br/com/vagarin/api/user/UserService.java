@@ -284,4 +284,10 @@ public class UserService {
             userDeviceRepository.save(newDevice);
         }
     }
+
+    public UserProfileResponseDTO checkUserExistsByFirebaseUid(String firebaseUid) {
+        User user = userRepository.findByFirebaseUid(firebaseUid)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado no backend local."));
+        return new UserProfileResponseDTO(user);
+    }
 }

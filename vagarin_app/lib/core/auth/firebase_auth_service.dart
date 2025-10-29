@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vagarin_app/core/api/i_api_service.dart';
 import 'package:vagarin_app/core/services/i_secure_local_storage_service.dart';
 import 'package:vagarin_app/shared/models/auth_user_model.dart';
 
@@ -11,12 +12,20 @@ class FirebaseAuthService implements IAuthService {
   final FirebaseAuth _firebaseAuth;
   final ISecureLocalStorageService _localStorageService;
   final GoogleSignIn _googleSignIn;
+  final IApiService _apiService;
 
   FirebaseAuthService(
     this._firebaseAuth,
     this._localStorageService,
     this._googleSignIn,
+    this._apiService,
   );
+
+  // Helper para checar registro no backend após login/signup
+  Future<bool> _checkAndFlagRegistrationNeeded() async {
+    final backendUser = await _apiService.checkUserRegistration();
+    return backendUser == null;
+  }
 
   /// Helper privado para salvar o token do usuário no storage
   Future<void> _saveToken(User? firebaseUser) async {
@@ -51,7 +60,7 @@ class FirebaseAuthService implements IAuthService {
   }
 
   @override
-  Future<void> signInWithEmail({
+  Future<bool> signInWithEmail({
     required String email,
     required String password,
   }) async {
@@ -60,10 +69,12 @@ class FirebaseAuthService implements IAuthService {
       password: password,
     );
     await _saveToken(credential.user);
+    bool needRegister = await _checkAndFlagRegistrationNeeded();
+    return needRegister;
   }
 
   @override
-  Future<void> signUpWithEmail({
+  Future<bool> signUpWithEmail({
     required String email,
     required String password,
   }) async {
@@ -72,10 +83,11 @@ class FirebaseAuthService implements IAuthService {
       password: password,
     );
     await _saveToken(credential.user);
+    return await _checkAndFlagRegistrationNeeded();
   }
 
   @override
-  Future<void> signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       if (kIsWeb) {
         final GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -89,6 +101,7 @@ class FirebaseAuthService implements IAuthService {
           googleProvider,
         );
         await _saveToken(userCredential.user);
+        return await _checkAndFlagRegistrationNeeded();
       } else {
         final GoogleSignIn googleSignIn = GoogleSignIn.instance;
         final GoogleSignInAccount googleUser = await googleSignIn
@@ -104,6 +117,7 @@ class FirebaseAuthService implements IAuthService {
           credential,
         );
         await _saveToken(userCredential.user);
+        return await _checkAndFlagRegistrationNeeded();
       }
     } catch (e) {
       await _signOutGoogle();
@@ -122,7 +136,7 @@ class FirebaseAuthService implements IAuthService {
     try {
       await _googleSignIn.signOut();
     } catch (e) {
-      print("exceção inofensiva");
+      // Não foi logado com o google
     }
   }
 }

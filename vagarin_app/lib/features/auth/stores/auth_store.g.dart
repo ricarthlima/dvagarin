@@ -89,6 +89,24 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$registrationStatusAtom = Atom(
+    name: '_AuthStore.registrationStatus',
+    context: context,
+  );
+
+  @override
+  RegistrationStatus get registrationStatus {
+    _$registrationStatusAtom.reportRead();
+    return super.registrationStatus;
+  }
+
+  @override
+  set registrationStatus(RegistrationStatus value) {
+    _$registrationStatusAtom.reportWrite(value, super.registrationStatus, () {
+      super.registrationStatus = value;
+    });
+  }
+
   late final _$checkLoginStatusAsyncAction = AsyncAction(
     '_AuthStore.checkLoginStatus',
     context: context,
@@ -167,6 +185,7 @@ isAuthenticated: ${isAuthenticated},
 isLoading: ${isLoading},
 errorMessage: ${errorMessage},
 currentUser: ${currentUser},
+registrationStatus: ${registrationStatus},
 isLoggedOut: ${isLoggedOut}
     ''';
   }

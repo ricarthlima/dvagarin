@@ -31,6 +31,7 @@ git clone https://github.com/ricarthlima/dvagarin.git
 docker-compose up -d
 ```
 
+
 ### Rode a Aplicação
 
 O IntelliJ ou o VSCode, se tiverem as extensões corretas instaladas, aceitarão rodar o arquivo `VagarinApiApplication.java`. Se você tiver o Maven configurado, basta rodar na raiz:
@@ -41,3 +42,13 @@ mvn spring-boot:run
 
 # Acesse a Documentação da API
 http://localhost:8080/swagger-ui.html
+
+
+### Liberando o Firewall
+Se encontrar problemas em parear um dispositivo físico externo ao localhost, use:
+
+```
+netsh advfirewall firewall add rule name="SpringBoot8080" dir=in action=allow protocol=TCP localport=8080
+```
+
+Lembre-se de acessar com o seu IP local, como http://192.168.3.28:8080/swagger-ui/index.html
