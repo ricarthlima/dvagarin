@@ -61,12 +61,8 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-            // 4. MUDANÇA PRINCIPAL AQUI!
         } catch (FirebaseAuthException e) {
-            // Se o token for inválido (expirado, assinatura errada, etc.)
-            // Nós vamos criar e retornar o nosso JSON de erro.
 
-            // Define o DTO de erro
             ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                     HttpServletResponse.SC_UNAUTHORIZED, // 401
                     "Unauthorized",
