@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../shared/helpers/digits_only.dart';
+
 part 'register_store.g.dart';
 
-enum RegisterPage { basics, photo, geo, notifications, confirm }
+enum RegisterPage { basics, phone, photo, geo, confirm }
 
 class RegisterStore = _RegisterStore with _$RegisterStore;
 
@@ -33,6 +35,12 @@ abstract class _RegisterStore with Store {
   String bio = '';
 
   @observable
+  String phone = '';
+
+  @observable
+  String? phoneError;
+
+  @observable
   File? imageFile;
 
   @observable
@@ -51,12 +59,11 @@ abstract class _RegisterStore with Store {
             nameErrorText == null &&
             username != '' &&
             usernameErrorText == null);
-
+      case RegisterPage.phone:
+        return (phone != '' && phoneError == null);
       case RegisterPage.photo:
         return true;
       case RegisterPage.geo:
-        return true;
-      case RegisterPage.notifications:
         return true;
       case RegisterPage.confirm:
         return true;
@@ -68,12 +75,12 @@ abstract class _RegisterStore with Store {
     switch (currentPage) {
       case RegisterPage.basics:
         return "Continuar";
+      case RegisterPage.phone:
+        return "Continuar";
       case RegisterPage.photo:
         return (imageFile != null) ? "Continuar" : "Pular";
       case RegisterPage.geo:
         return hasLocation ? "Continuar" : "Pular";
-      case RegisterPage.notifications:
-        return (hasActiveNotifications) ? "Continuar" : "Pular";
       case RegisterPage.confirm:
         return "Registrar-se";
     }
@@ -128,6 +135,21 @@ abstract class _RegisterStore with Store {
   @action
   void setBio(String? bio) {
     this.bio = bio ?? '';
+  }
+
+  @action
+  void setPhone(String? value) {
+    final raw = digitsOnly(value);
+    if (raw.isEmpty) {
+      phoneError = 'Informe o telefone';
+      return;
+    }
+    if (raw.length < 10 || raw.length > 11) {
+      phoneError = 'Telefone inválido';
+      return;
+    }
+    phoneError = null;
+    phone = raw;
   }
 
   @action

@@ -160,6 +160,39 @@ mixin _$RegisterStore on _RegisterStore, Store {
     });
   }
 
+  late final _$phoneAtom = Atom(name: '_RegisterStore.phone', context: context);
+
+  @override
+  String get phone {
+    _$phoneAtom.reportRead();
+    return super.phone;
+  }
+
+  @override
+  set phone(String value) {
+    _$phoneAtom.reportWrite(value, super.phone, () {
+      super.phone = value;
+    });
+  }
+
+  late final _$phoneErrorAtom = Atom(
+    name: '_RegisterStore.phoneError',
+    context: context,
+  );
+
+  @override
+  String? get phoneError {
+    _$phoneErrorAtom.reportRead();
+    return super.phoneError;
+  }
+
+  @override
+  set phoneError(String? value) {
+    _$phoneErrorAtom.reportWrite(value, super.phoneError, () {
+      super.phoneError = value;
+    });
+  }
+
   late final _$imageFileAtom = Atom(
     name: '_RegisterStore.imageFile',
     context: context,
@@ -284,6 +317,18 @@ mixin _$RegisterStore on _RegisterStore, Store {
   }
 
   @override
+  void setPhone(String? value) {
+    final _$actionInfo = _$_RegisterStoreActionController.startAction(
+      name: '_RegisterStore.setPhone',
+    );
+    try {
+      return super.setPhone(value);
+    } finally {
+      _$_RegisterStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setPhoto({required File? imageFile}) {
     final _$actionInfo = _$_RegisterStoreActionController.startAction(
       name: '_RegisterStore.setPhoto',
@@ -367,6 +412,8 @@ username: ${username},
 usernameErrorText: ${usernameErrorText},
 birthday: ${birthday},
 bio: ${bio},
+phone: ${phone},
+phoneError: ${phoneError},
 imageFile: ${imageFile},
 geoPosition: ${geoPosition},
 hasActiveNotifications: ${hasActiveNotifications},

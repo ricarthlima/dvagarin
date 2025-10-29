@@ -54,12 +54,12 @@ class RegisterScreen extends StatelessWidget {
                   switch (e) {
                     case RegisterPage.basics:
                       return RegisterBasicLayout();
+                    case RegisterPage.phone:
+                      return RegisterPhoneLayout();
                     case RegisterPage.photo:
                       return RegisterPhotoLayout();
                     case RegisterPage.geo:
                       return RegisterGeoLayout();
-                    case RegisterPage.notifications:
-                      return RegisterNotificationLayout();
                     case RegisterPage.confirm:
                       return RegisterConfirmLayout();
                   }
