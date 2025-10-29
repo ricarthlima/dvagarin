@@ -17,6 +17,13 @@ mixin _$RegisterStore on _RegisterStore, Store {
         () => super.formattedBirthday,
         name: '_RegisterStore.formattedBirthday',
       )).value;
+  Computed<bool>? _$hasLocationComputed;
+
+  @override
+  bool get hasLocation => (_$hasLocationComputed ??= Computed<bool>(
+    () => super.hasLocation,
+    name: '_RegisterStore.hasLocation',
+  )).value;
   Computed<bool>? _$canNextPageComputed;
 
   @override
@@ -171,33 +178,21 @@ mixin _$RegisterStore on _RegisterStore, Store {
     });
   }
 
-  late final _$latAtom = Atom(name: '_RegisterStore.lat', context: context);
+  late final _$geoPositionAtom = Atom(
+    name: '_RegisterStore.geoPosition',
+    context: context,
+  );
 
   @override
-  double get lat {
-    _$latAtom.reportRead();
-    return super.lat;
+  Position? get geoPosition {
+    _$geoPositionAtom.reportRead();
+    return super.geoPosition;
   }
 
   @override
-  set lat(double value) {
-    _$latAtom.reportWrite(value, super.lat, () {
-      super.lat = value;
-    });
-  }
-
-  late final _$longAtom = Atom(name: '_RegisterStore.long', context: context);
-
-  @override
-  double get long {
-    _$longAtom.reportRead();
-    return super.long;
-  }
-
-  @override
-  set long(double value) {
-    _$longAtom.reportWrite(value, super.long, () {
-      super.long = value;
+  set geoPosition(Position? value) {
+    _$geoPositionAtom.reportWrite(value, super.geoPosition, () {
+      super.geoPosition = value;
     });
   }
 
@@ -313,12 +308,24 @@ mixin _$RegisterStore on _RegisterStore, Store {
   }
 
   @override
-  void setGeo({required double lat, required double long}) {
+  void setGeo({required Position pos}) {
     final _$actionInfo = _$_RegisterStoreActionController.startAction(
       name: '_RegisterStore.setGeo',
     );
     try {
-      return super.setGeo(lat: lat, long: long);
+      return super.setGeo(pos: pos);
+    } finally {
+      _$_RegisterStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void cleanGeo() {
+    final _$actionInfo = _$_RegisterStoreActionController.startAction(
+      name: '_RegisterStore.cleanGeo',
+    );
+    try {
+      return super.cleanGeo();
     } finally {
       _$_RegisterStoreActionController.endAction(_$actionInfo);
     }
@@ -361,10 +368,10 @@ usernameErrorText: ${usernameErrorText},
 birthday: ${birthday},
 bio: ${bio},
 imageFile: ${imageFile},
-lat: ${lat},
-long: ${long},
+geoPosition: ${geoPosition},
 hasActiveNotifications: ${hasActiveNotifications},
 formattedBirthday: ${formattedBirthday},
+hasLocation: ${hasLocation},
 canNextPage: ${canNextPage},
 labelContinueButton: ${labelContinueButton}
     ''';

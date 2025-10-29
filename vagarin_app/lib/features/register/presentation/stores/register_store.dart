@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 
 part 'register_store.g.dart';
@@ -35,10 +36,9 @@ abstract class _RegisterStore with Store {
   File? imageFile;
 
   @observable
-  double lat = 0;
-
-  @observable
-  double long = 0;
+  Position? geoPosition;
+  @computed
+  bool get hasLocation => geoPosition != null;
 
   @observable
   bool hasActiveNotifications = false;
@@ -71,7 +71,7 @@ abstract class _RegisterStore with Store {
       case RegisterPage.photo:
         return (imageFile != null) ? "Continuar" : "Pular";
       case RegisterPage.geo:
-        return (lat != 0 && long != 0) ? "Continuar" : "Pular";
+        return hasLocation ? "Continuar" : "Pular";
       case RegisterPage.notifications:
         return (hasActiveNotifications) ? "Continuar" : "Pular";
       case RegisterPage.confirm:
@@ -141,10 +141,13 @@ abstract class _RegisterStore with Store {
   }
 
   @action
-  void setGeo({required double lat, required double long}) {
-    this.lat = lat;
-    this.long = long;
-    currentPage = RegisterPage.notifications;
+  void setGeo({required Position pos}) {
+    geoPosition = pos;
+  }
+
+  @action
+  void cleanGeo() {
+    geoPosition = null;
   }
 
   @action
