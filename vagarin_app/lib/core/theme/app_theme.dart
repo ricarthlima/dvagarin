@@ -49,7 +49,7 @@ class AppTheme {
         titleLarge: TextStyle(
           fontFamily: AppFonts.fredoka,
           fontWeight: FontWeights.fredokaSemiBold,
-          fontSize: 20,
+          fontSize: 28,
           color: AppColors.primary,
         ),
         titleMedium: TextStyle(

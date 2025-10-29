@@ -11,6 +11,7 @@ import 'package:vagarin_app/core/auth/firebase_auth_service.dart';
 import 'package:vagarin_app/core/auth/i_auth_service.dart';
 import 'package:vagarin_app/core/services/i_secure_local_storage_service.dart';
 import 'package:vagarin_app/core/services/secure_storage_service.dart';
+import 'package:vagarin_app/features/register/presentation/stores/register_store.dart';
 
 import '../core/api/auth_interceptor.dart';
 import '../core/api/i_api_service.dart';
@@ -100,4 +101,6 @@ void setupInjections() {
 
   getIt.registerSingleton<AuthStore>(AuthStore(getIt<IAuthService>()));
   getIt.registerSingleton<AuthStateListenable>(AuthStateListenable());
+
+  getIt.registerLazySingleton<RegisterStore>(() => RegisterStore());
 }
