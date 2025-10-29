@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vagarin_app/core/theme/app_colors.dart';
 import 'package:vagarin_app/features/register/presentation/widget/register_scaffold_layout.dart';
+import 'package:vagarin_app/features/register/presentation/widget/user_image_widget.dart';
 import 'package:vagarin_app/shared/helpers/pick_image.dart';
 
 import '../../../../shared/injection_container.dart';
@@ -29,19 +30,7 @@ class RegisterPhotoLayout extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 16,
             children: [
-              SizedBox(
-                width: 256,
-                height: 256,
-                child: CircleAvatar(
-                  backgroundImage: registerStore.imageFile != null
-                      ? MemoryImage(registerStore.imageFile!.readAsBytesSync())
-                      : null,
-                  backgroundColor: Colors.grey,
-                  child: registerStore.imageFile == null
-                      ? Icon(Icons.person, size: 92)
-                      : null,
-                ),
-              ),
+              UserImageWidget(registerStore: registerStore),
               ElevatedButton(
                 onPressed: () {
                   _selectPhotoPressed(context, registerStore);

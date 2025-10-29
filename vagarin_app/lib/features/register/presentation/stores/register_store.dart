@@ -66,7 +66,7 @@ abstract class _RegisterStore with Store {
       case RegisterPage.geo:
         return true;
       case RegisterPage.confirm:
-        return true;
+        return false;
     }
   }
 
@@ -82,7 +82,7 @@ abstract class _RegisterStore with Store {
       case RegisterPage.geo:
         return hasLocation ? "Continuar" : "Pular";
       case RegisterPage.confirm:
-        return "Registrar-se";
+        return "";
     }
   }
 
