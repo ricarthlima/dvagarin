@@ -1,8 +1,13 @@
 import 'dart:io';
 import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../shared/helpers/digits_only.dart';
+import '../../../../shared/models/user_model.dart';
+import '../../../auth/stores/auth_store.dart';
+import '../../data/repositories/i_user_repository.dart';
+import '../../domain/user_register_data.dart';
 
 part 'register_store.g.dart';
 
@@ -11,6 +16,25 @@ enum RegisterPage { basics, phone, photo, geo, confirm }
 class RegisterStore = _RegisterStore with _$RegisterStore;
 
 abstract class _RegisterStore with Store {
+  final IUserRepository _userRepository;
+  final AuthStore _authStore;
+  final Logger _logger;
+
+  _RegisterStore(this._userRepository, this._authStore, this._logger);
+
+  // Para a subimissão
+  @observable
+  ObservableFuture<UserModel?> registerFuture = ObservableFuture.value(null);
+
+  @observable
+  bool isSubmitting = false;
+
+  @computed
+  bool get canSubmit => currentPage == RegisterPage.confirm && !isSubmitting;
+
+  @observable
+  String? submissionError;
+
   @observable
   RegisterPage currentPage = RegisterPage.basics;
 
@@ -82,7 +106,7 @@ abstract class _RegisterStore with Store {
       case RegisterPage.geo:
         return hasLocation ? "Continuar" : "Pular";
       case RegisterPage.confirm:
-        return "";
+        return isSubmitting ? "Enviando..." : "";
     }
   }
 
@@ -179,5 +203,43 @@ abstract class _RegisterStore with Store {
   }
 
   @action
-  void submit() {}
+  void submit() async {
+    if (isSubmitting) return;
+
+    isSubmitting = true;
+    submissionError = null;
+
+    try {
+      // 1. Cria o DTO (UserRegisterData)
+      final data = UserRegisterData(
+        name: name,
+        username: username,
+        birthday: birthday,
+        bio: bio,
+        phone: phone,
+        imageFile: imageFile,
+        geoPosition: geoPosition,
+        hasActiveNotifications: hasActiveNotifications,
+        firebaseUid: _authStore.currentUser.uid, // Pega o UID do usuário logado
+      );
+
+      _logger.i(
+        '[RegisterStore] Enviando dados de registro para o repositório...',
+      );
+
+      // 2. Chama o Repositório
+      await _userRepository.registerUser(data);
+
+      // 3. Sucesso! Navega para Home
+      _logger.i(
+        '[RegisterStore] Registro finalizado com sucesso! Navegando para Home.',
+      );
+
+      _authStore.completeBackendRegistration();
+    } on Exception catch (e) {
+      _logger.e('[RegisterStore] Erro na submissão do registro', error: e);
+      submissionError =
+          'Falha ao finalizar o registro. Verifique a conexão ou tente um username diferente.';
+    }
+  }
 }

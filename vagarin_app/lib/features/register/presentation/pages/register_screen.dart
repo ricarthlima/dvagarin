@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:vagarin_app/features/register/presentation/stores/register_store.dart';
-
 import '../../../../shared/injection_container.dart';
 import '../layouts/register_layouts.dart';
 
@@ -48,6 +47,9 @@ class RegisterScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 32, right: 32, top: 16),
           child: Observer(
             builder: (_) {
+              if (registerStore.isSubmitting) {
+                return Center(child: CircularProgressIndicator());
+              }
               return IndexedStack(
                 index: registerStore.currentPage.index,
                 children: RegisterPage.values.map((e) {

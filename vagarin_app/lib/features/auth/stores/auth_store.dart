@@ -158,4 +158,9 @@ abstract class _AuthStore with Store {
     }
     return 'Ocorreu um erro inesperado: ${exception.toString()}';
   }
+
+  @action
+  void completeBackendRegistration() {
+    registrationStatus = RegistrationStatus.complete;
+  }
 }
