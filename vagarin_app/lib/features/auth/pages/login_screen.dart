@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vagarin_app/core/theme/app_colors.dart';
@@ -140,12 +141,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   label: "Criar conta",
                 ),
-                GoogleAuthButton(
-                  onPressed: () {
-                    authStore.signInWithGoogle();
-                  },
-                  themeMode: ThemeMode.light,
-                ),
+                if (kIsWeb)
+                  GoogleAuthButton(
+                    onPressed: () {
+                      authStore.signInWithGoogle();
+                    },
+                    themeMode: ThemeMode.light,
+                  ),
               ],
             );
           }

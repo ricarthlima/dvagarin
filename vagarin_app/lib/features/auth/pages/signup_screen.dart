@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
@@ -147,12 +148,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   label: "Entrar com minha conta",
                 ),
-                GoogleAuthButton(
-                  onPressed: () {
-                    authStore.signInWithGoogle();
-                  },
-                  themeMode: ThemeMode.light,
-                ),
+                if (kIsWeb)
+                  GoogleAuthButton(
+                    onPressed: () {
+                      authStore.signInWithGoogle();
+                    },
+                    themeMode: ThemeMode.light,
+                  ),
               ],
             );
           }
