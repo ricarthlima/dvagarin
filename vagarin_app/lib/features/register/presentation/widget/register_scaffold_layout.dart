@@ -19,13 +19,14 @@ class RegisterScaffoldLayout extends StatelessWidget {
       spacing: 32,
       children: [
         Column(
+          spacing: 8,
           children: [
             Text(
               title,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            Text(subtitle),
+            Text(subtitle, textAlign: TextAlign.center),
           ],
         ),
         Expanded(child: child),

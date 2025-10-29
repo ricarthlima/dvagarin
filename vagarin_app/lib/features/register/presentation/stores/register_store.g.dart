@@ -24,6 +24,14 @@ mixin _$RegisterStore on _RegisterStore, Store {
     () => super.canNextPage,
     name: '_RegisterStore.canNextPage',
   )).value;
+  Computed<String>? _$labelContinueButtonComputed;
+
+  @override
+  String get labelContinueButton =>
+      (_$labelContinueButtonComputed ??= Computed<String>(
+        () => super.labelContinueButton,
+        name: '_RegisterStore.labelContinueButton',
+      )).value;
 
   late final _$currentPageAtom = Atom(
     name: '_RegisterStore.currentPage',
@@ -145,36 +153,21 @@ mixin _$RegisterStore on _RegisterStore, Store {
     });
   }
 
-  late final _$imageBytesAtom = Atom(
-    name: '_RegisterStore.imageBytes',
+  late final _$imageFileAtom = Atom(
+    name: '_RegisterStore.imageFile',
     context: context,
   );
 
   @override
-  Uint8List? get imageBytes {
-    _$imageBytesAtom.reportRead();
-    return super.imageBytes;
+  File? get imageFile {
+    _$imageFileAtom.reportRead();
+    return super.imageFile;
   }
 
   @override
-  set imageBytes(Uint8List? value) {
-    _$imageBytesAtom.reportWrite(value, super.imageBytes, () {
-      super.imageBytes = value;
-    });
-  }
-
-  late final _$phoneAtom = Atom(name: '_RegisterStore.phone', context: context);
-
-  @override
-  String get phone {
-    _$phoneAtom.reportRead();
-    return super.phone;
-  }
-
-  @override
-  set phone(String value) {
-    _$phoneAtom.reportWrite(value, super.phone, () {
-      super.phone = value;
+  set imageFile(File? value) {
+    _$imageFileAtom.reportWrite(value, super.imageFile, () {
+      super.imageFile = value;
     });
   }
 
@@ -296,24 +289,24 @@ mixin _$RegisterStore on _RegisterStore, Store {
   }
 
   @override
-  void setPhoto({required Uint8List imageBytes}) {
+  void setPhoto({required File? imageFile}) {
     final _$actionInfo = _$_RegisterStoreActionController.startAction(
       name: '_RegisterStore.setPhoto',
     );
     try {
-      return super.setPhoto(imageBytes: imageBytes);
+      return super.setPhoto(imageFile: imageFile);
     } finally {
       _$_RegisterStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setPhone({required String phone}) {
+  void cleanPhoto() {
     final _$actionInfo = _$_RegisterStoreActionController.startAction(
-      name: '_RegisterStore.setPhone',
+      name: '_RegisterStore.cleanPhoto',
     );
     try {
-      return super.setPhone(phone: phone);
+      return super.cleanPhoto();
     } finally {
       _$_RegisterStoreActionController.endAction(_$actionInfo);
     }
@@ -367,13 +360,13 @@ username: ${username},
 usernameErrorText: ${usernameErrorText},
 birthday: ${birthday},
 bio: ${bio},
-imageBytes: ${imageBytes},
-phone: ${phone},
+imageFile: ${imageFile},
 lat: ${lat},
 long: ${long},
 hasActiveNotifications: ${hasActiveNotifications},
 formattedBirthday: ${formattedBirthday},
-canNextPage: ${canNextPage}
+canNextPage: ${canNextPage},
+labelContinueButton: ${labelContinueButton}
     ''';
   }
 }

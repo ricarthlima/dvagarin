@@ -10,7 +10,7 @@ import 'package:vagarin_app/features/auth/widgets/terms_and_privacy_widget.dart'
 import 'package:vagarin_app/shared/injection_container.dart';
 import 'package:vagarin_app/shared/widgets/google_auth_button.dart';
 
-import '../../../core/helpers/dimensions.dart';
+import '../../../shared/helpers/dimensions.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_ui_constants.dart';
 import '../../../shared/widgets/hard_elevated_button.dart';

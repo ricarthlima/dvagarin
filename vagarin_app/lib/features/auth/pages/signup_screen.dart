@@ -8,7 +8,7 @@ import 'package:vagarin_app/core/theme/app_colors.dart';
 import 'package:vagarin_app/features/auth/stores/auth_store.dart';
 import 'package:vagarin_app/features/auth/stores/signup_form_store.dart';
 
-import '../../../core/helpers/dimensions.dart';
+import '../../../shared/helpers/dimensions.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_ui_constants.dart';
 import '../../../shared/injection_container.dart';

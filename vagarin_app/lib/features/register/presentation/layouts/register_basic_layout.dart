@@ -127,7 +127,7 @@ class _RegisterBasicLayoutState extends State<RegisterBasicLayout> {
 
     if (picked != null && picked != registerStore.birthday) {
       registerStore.birthday = picked;
-      _bioController.text = registerStore.formattedBirthday;
+      _dobController.text = registerStore.formattedBirthday;
     }
   }
 }

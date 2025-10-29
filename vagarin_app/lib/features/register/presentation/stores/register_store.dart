@@ -1,10 +1,9 @@
-import 'dart:typed_data';
-
+import 'dart:io';
 import 'package:mobx/mobx.dart';
 
 part 'register_store.g.dart';
 
-enum RegisterPage { basics, photo, phone, geo, notifications, confirm }
+enum RegisterPage { basics, photo, geo, notifications, confirm }
 
 class RegisterStore = _RegisterStore with _$RegisterStore;
 
@@ -33,10 +32,7 @@ abstract class _RegisterStore with Store {
   String bio = '';
 
   @observable
-  Uint8List? imageBytes;
-
-  @observable
-  String phone = '';
+  File? imageFile;
 
   @observable
   double lat = 0;
@@ -58,14 +54,28 @@ abstract class _RegisterStore with Store {
 
       case RegisterPage.photo:
         return true;
-      case RegisterPage.phone:
-        return true;
       case RegisterPage.geo:
         return true;
       case RegisterPage.notifications:
         return true;
       case RegisterPage.confirm:
         return true;
+    }
+  }
+
+  @computed
+  String get labelContinueButton {
+    switch (currentPage) {
+      case RegisterPage.basics:
+        return "Continuar";
+      case RegisterPage.photo:
+        return (imageFile != null) ? "Continuar" : "Pular";
+      case RegisterPage.geo:
+        return (lat != 0 && long != 0) ? "Continuar" : "Pular";
+      case RegisterPage.notifications:
+        return (hasActiveNotifications) ? "Continuar" : "Pular";
+      case RegisterPage.confirm:
+        return "Registrar-se";
     }
   }
 
@@ -121,15 +131,13 @@ abstract class _RegisterStore with Store {
   }
 
   @action
-  void setPhoto({required Uint8List imageBytes}) {
-    this.imageBytes = imageBytes;
-    currentPage = RegisterPage.phone;
+  void setPhoto({required File? imageFile}) {
+    this.imageFile = imageFile;
   }
 
   @action
-  void setPhone({required String phone}) {
-    this.phone = phone;
-    currentPage = RegisterPage.geo;
+  void cleanPhoto() {
+    imageFile = null;
   }
 
   @action

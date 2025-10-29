@@ -37,11 +37,7 @@ class RegisterScreen extends StatelessWidget {
                         registerStore.nextPage();
                       }
                     : null,
-                child: Text(
-                  registerStore.currentPage == RegisterPage.confirm
-                      ? "Registrar-se"
-                      : "Continuar",
-                ),
+                child: Text(registerStore.labelContinueButton),
               );
             },
           ),
@@ -60,8 +56,6 @@ class RegisterScreen extends StatelessWidget {
                       return RegisterBasicLayout();
                     case RegisterPage.photo:
                       return RegisterPhotoLayout();
-                    case RegisterPage.phone:
-                      return RegisterPhoneLayout();
                     case RegisterPage.geo:
                       return RegisterGeoLayout();
                     case RegisterPage.notifications:
