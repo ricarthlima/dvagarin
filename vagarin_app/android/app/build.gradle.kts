@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.vagarin_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
